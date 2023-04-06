@@ -1,0 +1,1 @@
+CREATE OR REPLACE TABLE icd10cm as SELECT DISTINCT * FROM read_csv('../data/reference/icd10cm.csv', header=True, columns={'code_value': 'VARCHAR', 'code_long_description': 'VARCHAR'})

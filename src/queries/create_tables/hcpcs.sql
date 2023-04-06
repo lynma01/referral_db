@@ -1,0 +1,1 @@
+CREATE OR REPLACE TABLE hcpcs as SELECT DISTINCT * FROM read_csv_auto('../data/reference/cpt_hcpcs.csv', header=True)
