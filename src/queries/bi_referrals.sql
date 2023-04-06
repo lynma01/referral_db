@@ -1,6 +1,7 @@
 CREATE OR REPLACE TABLE bi_referrals as
 
     SELECT DISTINCT *
+    , COALESCE(tm.Team, 'N/A') as User_Team
 
     , UPPER("Last Name") || UPPER("First Name") as patient_name
 
@@ -39,5 +40,9 @@ CREATE OR REPLACE TABLE bi_referrals as
 
     LEFT JOIN hcpcs AS pc
         on RIGHT("Procedure", 5) = pc.code_value
+
+    LEFT JOIN team as tm
+        on  "User_FName" = tm.FName
+        AND "User_LName" = tm.LName
 
     WHERE "Visit Status" IS NOT NULL
