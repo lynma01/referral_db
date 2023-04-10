@@ -1,6 +1,8 @@
 CREATE OR REPLACE TABLE bi_referrals as
 
-    SELECT DISTINCT *
+WITH main as (
+
+    SELECT DISTINCT rf.*
     , COALESCE(tm.Team, 'N/A') as User_Team
 
     , UPPER("Last Name") || UPPER("First Name") as patient_name
@@ -46,3 +48,21 @@ CREATE OR REPLACE TABLE bi_referrals as
         AND "User_LName" = tm.Lname
 
     WHERE "Visit Status" IS NOT NULL
+)
+
+, max_updatedt as (
+    SELECT DISTINCT
+        Referral_keyid
+        , Update_DT
+        , MAX(Update_DT) OVER (PARTITION BY Referral_keyid) as Last_UpdateDT
+
+    FROM bi_referrals
+)
+
+SELECT DISTINCT m.* 
+
+FROM main as m
+
+INNER JOIN max_updatedt as dt
+    ON m.Update_DT = dt.Last_UpdateDT
+    AND m.Referral_keyid = dt.Referral_keyid
