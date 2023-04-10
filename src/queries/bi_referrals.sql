@@ -5,9 +5,11 @@ WITH main as (
     SELECT DISTINCT rf.*
     , COALESCE(tm.Team, 'N/A') as User_Team
 
+    , "DOB":: DATE as "DOB" 
+
     , UPPER("Last Name") || UPPER("First Name") as patient_name
 
-    , UPPER("Last Name") || UPPER("First Name") || "DOB" as patient_id
+    , UPPER("Last Name") || UPPER("First Name") || "DOB":: DATE as patient_id
 
     , patient_id || coalesce("Plan ID", 'NA') || coalesce("Referring Provider NPI", 'NA') || "Referral Date" || coalesce("Procedure", 'NA') || coalesce(Specialty, 'NA') as Referral_keyid
 
