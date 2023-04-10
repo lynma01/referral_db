@@ -42,7 +42,7 @@ CREATE OR REPLACE TABLE bi_referrals as
         on RIGHT("Procedure", 5) = pc.code_value
 
     LEFT JOIN team as tm
-        on  "User_FName" = tm.FName
-        AND "User_LName" = tm.LName
+        on  "User_FName" = tm.Fname
+        AND "User_LName" = tm.Lname
 
     WHERE "Visit Status" IS NOT NULL
