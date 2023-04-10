@@ -56,7 +56,7 @@ WITH main as (
         , Update_DT
         , MAX(Update_DT) OVER (PARTITION BY Referral_keyid) as Last_UpdateDT
 
-    FROM bi_referrals
+    FROM main
 )
 
 SELECT DISTINCT m.* 
