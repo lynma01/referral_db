@@ -9,7 +9,7 @@ WITH main as (
 
     , UPPER("Last Name") || UPPER("First Name") || "DOB" as patient_id
 
-    , patient_id || coalesce("Plan ID", 'NA') || coalesce("Referring Provider NPI", 'NA') || "Referral Date" || coalesce("Procedure", 'NA') || coalesce(Specialty, 'NA') as Referral_keyid
+    , patient_id || "Referring Provider NPI" || "Referral Date" || coalesce("Diagnosis", 'NA') as Referral_keyid
 
     , CASE
         WHEN "Approval Status" IN ('No HP Auth Required', 'HP Approved', 'Approved (comments required)', 'Complete/no Auth# needed')  
