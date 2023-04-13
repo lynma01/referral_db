@@ -1,4 +1,3 @@
-%%sql 
 CREATE OR REPLACE TABLE bi_referrals AS 
 
 WITH main AS (
@@ -10,7 +9,7 @@ WITH main AS (
 
     , UPPER("Last Name") || UPPER("First Name") || "DOB" AS patient_id
 
-    , patient_id || "Referring Provider NPI" || "Referral Date" || coalesce("Diagnosis", 'NA') AS Referral_keyid
+    , patient_id || "Referring Provider NPI" || "Referral Date" || coalesce("Diagnosis", 'NA') || coalesce("Specialty", 'NA') AS Referral_keyid
 
     , CASE
         WHEN "Approval Status" IN ('No HP Auth Required', 'HP Approved', 'Approved (comments required)', 'Complete/no Auth# needed')  
@@ -34,7 +33,7 @@ WITH main AS (
         , substring("Home Phone", 1, 3), substring("Home Phone", 3, 3), substring("Home Phone", 6, 4)
     ) AS "Fmt Home Phone"
 
-    , REPLACE(REPLACE(REPLACE(REGEXP_REPLACE(UPPER("Health Plan"), '[(*)]', ' ', 'g'), '-', ' '), '  ', ' '), '  ', ' ') AS "Health Plan"
+    , REPLACE(REPLACE(REPLACE(REGEXP_REPLACE(UPPER("Health Plan"), '[(*)]', ' ', 'g'), '-', ' '), '  ', ' '), '  ', ' ') AS "Health Plan FMT"
 
     , regexp_replace(array_slice(Address, -9, -7), '[0-9]', '', 'g') AS STATE
 
