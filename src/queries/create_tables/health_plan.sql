@@ -1,1 +1,1 @@
-CREATE OR REPLACE TABLE icd10cm as SELECT DISTINCT * FROM read_csv('../data/reference/health_plan.csv', header=True)
+CREATE OR REPLACE TABLE health_plan as SELECT DISTINCT * FROM read_csv_auto('../data/reference/health_plan.csv', header=True)

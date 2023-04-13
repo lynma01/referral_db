@@ -1,3 +1,4 @@
+%%sql 
 CREATE OR REPLACE TABLE bi_referrals AS 
 
 WITH main AS (
@@ -75,4 +76,16 @@ WITH main AS (
         AND m.Referral_keyid = dt.Referral_keyid
 )
 
-SELECT DISTINCT * FROM condense_dates AS cd
+, gatekeeper as (
+    SELECT DISTINCT 
+        cd.* 
+        , hp.GATEKEEPER
+
+    FROM condense_dates AS cd
+
+    LEFT JOIN health_plan AS hp
+        ON cd.STATE = hp.STATE
+        AND cd.LOB = hp.LOB
+)
+
+SELECT DISTINCT * FROM gatekeeper
