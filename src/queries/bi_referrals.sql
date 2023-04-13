@@ -33,7 +33,7 @@ WITH main AS (
         , substring("Home Phone", 1, 3), substring("Home Phone", 3, 3), substring("Home Phone", 6, 4)
     ) AS "Fmt Home Phone"
 
-    , REPLACE(REPLACE(REGEXP_REPLACE(UPPER("Health Plan"), '[(*)]', ' ', 'g'), '-', ' '), '  ', ' ') AS "Health Plan"
+    , REPLACE(REPLACE(REPLACE(REGEXP_REPLACE(UPPER("Health Plan"), '[(*)]', ' ', 'g'), '-', ' '), '  ', ' '), '  ', ' ') AS "Health Plan"
 
     , icd.code_long_description AS "Diagnosis Description"
 
