@@ -1,0 +1,1 @@
+CREATE OR REPLACE TABLE icd10cm as SELECT DISTINCT * FROM read_csv('../data/reference/health_plan.csv', header=True)
