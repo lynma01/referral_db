@@ -1,15 +1,15 @@
-CREATE OR REPLACE TABLE bi_referrals as
+CREATE OR REPLACE TABLE bi_referrals AS 
 
-WITH main as (
+WITH main AS (
 
     SELECT DISTINCT rf.*
-    , COALESCE(tm.Team, 'N/A') as User_Team
+    , COALESCE(tm.Team, 'N/A') AS User_Team
 
-    , UPPER("Last Name") || UPPER("First Name") as patient_name
+    , UPPER("Last Name") || UPPER("First Name") AS patient_name
 
-    , UPPER("Last Name") || UPPER("First Name") || "DOB" as patient_id
+    , UPPER("Last Name") || UPPER("First Name") || "DOB" AS patient_id
 
-    , patient_id || "Referring Provider NPI" || "Referral Date" || coalesce("Diagnosis", 'NA') as Referral_keyid
+    , patient_id || "Referring Provider NPI" || "Referral Date" || coalesce("Diagnosis", 'NA') AS Referral_keyid
 
     , CASE
         WHEN "Approval Status" IN ('No HP Auth Required', 'HP Approved', 'Approved (comments required)', 'Complete/no Auth# needed')  
@@ -18,20 +18,22 @@ WITH main as (
         WHEN "Approval Status" IN ('Denied- Per Insurance Plan', 'Denied- Per Medical Director Review')
             AND "Visit Status" = 'Open'
             THEN 'Completed'
-        ELSE "Referral Status" END as "Updated Status"
+        ELSE "Referral Status" END AS "Updated Status"
 
-    , RIGHT("Procedure", 5) as Proc_code
-    , pc.code_short_description as Proc_name 
+    , RIGHT("Procedure", 5) AS Proc_code
+    , pc.code_short_description AS Proc_name 
 
     , FORMAT(
         '({}) {}-{}'
         , substring("Mobile Phone", 1, 3), substring("Mobile Phone", 3, 3), substring("Mobile Phone", 6, 4)
-    ) as "Fmt Mobile Phone"
+    ) AS "Fmt Mobile Phone"
 
     , FORMAT(
         '({}) {}-{}'
         , substring("Home Phone", 1, 3), substring("Home Phone", 3, 3), substring("Home Phone", 6, 4)
-    ) as "Fmt Home Phone"
+    ) AS "Fmt Home Phone"
+
+    , REPLACE(REPLACE(REGEXP_REPLACE(UPPER("Health Plan"), '[(*)]', ' ', 'g'), '-', ' '), '  ', ' ') AS "Health Plan"
 
     , icd.code_long_description AS "Diagnosis Description"
 
@@ -41,16 +43,16 @@ WITH main as (
         ON trim(rf."Diagnosis") = trim(icd.code_value)
 
     LEFT JOIN hcpcs AS pc
-        on RIGHT("Procedure", 5) = pc.code_value
+        ON RIGHT("Procedure", 5) = pc.code_value
 
-    LEFT JOIN team as tm
-        on  "User_FName" = tm.Fname
+    LEFT JOIN team AS tm
+        ON "User_FName" = tm.Fname
         AND "User_LName" = tm.Lname
 
     WHERE "Visit Status" IS NOT NULL
 )
 
-, max_updatedt as (
+, max_updatedt AS (
     SELECT DISTINCT
         Referral_keyid
         , Update_DT
@@ -59,10 +61,14 @@ WITH main as (
     FROM main 
 )
 
-SELECT DISTINCT m.* 
+, condense_dates AS (
+    SELECT DISTINCT m.* 
 
-FROM main as m
+    FROM main AS m
 
-INNER JOIN max_updatedt as dt
-    ON m.Update_DT = dt.Last_UpdateDT
-    AND m.Referral_keyid = dt.Referral_keyid
+    INNER JOIN max_updatedt as dt
+        ON m.Update_DT = dt.Last_UpdateDT
+        AND m.Referral_keyid = dt.Referral_keyid
+)
+
+SELECT DISTINCT * FROM condense_dates AS cd
