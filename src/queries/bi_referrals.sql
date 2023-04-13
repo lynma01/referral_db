@@ -35,6 +35,10 @@ WITH main AS (
 
     , REPLACE(REPLACE(REPLACE(REGEXP_REPLACE(UPPER("Health Plan"), '[(*)]', ' ', 'g'), '-', ' '), '  ', ' '), '  ', ' ') AS "Health Plan"
 
+    , regexp_replace(array_slice(Address, -9, -7), '[0-9]', '', 'g') AS STATE
+
+    , array_slice(Address, -5, NULL) as ZIPCODE
+
     , icd.code_long_description AS "Diagnosis Description"
 
     FROM cln_referrals AS rf
