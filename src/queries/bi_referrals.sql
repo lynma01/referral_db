@@ -85,6 +85,7 @@ WITH main AS (
     LEFT JOIN health_plan AS hp
         ON cd.STATE = hp.STATE
         AND cd.LOB = hp.LOB
+        AND cd."Health Plan FMT" = hp.HEALTH_PLAN
 )
 
 SELECT DISTINCT * FROM gatekeeper
