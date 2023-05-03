@@ -1,5 +1,4 @@
 # Local Datalake - Referrals
-
 This repository is a demonstration of how to create a localized datalake for referrals data. This repository *only* includes the python and sql code required to extract, transform, and load the data into a reportable format.
 
 ## Data Refresh Process:
